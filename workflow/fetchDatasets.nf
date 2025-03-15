@@ -1,7 +1,7 @@
 process fetchDatasets {
     tag 'fetch_datasets'
 
-    publishDir "${launchDir}/${params.datadir}/${params.datasets_split}", mode: 'copy'
+    publishDir "${launchDir}/${params.datadir}", mode: 'copy'
 
     input:
         path collections_json
@@ -12,7 +12,7 @@ process fetchDatasets {
 
     script:
     """
-    echo "Fetching datasets from CellxGene API (Test Mode: $test_mode)"
+    echo "Fetching datasets from collection file and writing out a datasets.json file for each dataset_id (Test Mode: $test_mode)"
     
     python "${launchDir}/bin/fetch_datasets.py" "$collections_json" "$test_mode"
     """

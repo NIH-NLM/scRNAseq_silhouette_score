@@ -1,7 +1,7 @@
 process splitCollections {
     tag 'split_collections'
 
-    publishDir "${launchDir}/${params.datadir}/${params.collections_split}", mode: 'copy'
+    publishDir "${launchDir}/${params.datadir}", mode: 'copy'
 
     input:
         path collection_json
