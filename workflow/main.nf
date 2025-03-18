@@ -22,16 +22,13 @@ workflow {
     collection_json = fetchCollections(params.collection_info)
 
     // **Step 2: Split collections into multiple JSONs**
-    splitCollections(collection_json)
-    collections_json = Channel.fromPath("${params.datadir}/collection_*.json")
+    collections_json =splitCollections(collection_json)
 
     // **Step 3: Fetch dataset metadata for each collection**
-    fetchDatasets(collections_json, params.test_mode)
-    datasets_json = Channel.fromPath("${params.datadir}/datasets_*.json")
+    datasets_json = fetchDatasets(collections_json, params.test_mode)
   
     // **Step 4: Split datasets into individual dataset versions**
-    splitDatasets(datasets_json)
-    dataset_versions_json = Channel.fromPath("${params.datadir}/dataset_*.json")
+    dataset_versions_json = splitDatasets(datasets_json)
 
     // **Step 5: Compute silhouette scores for each dataset version**
     scores_csvs = computeSilhouette(dataset_versions_json)
