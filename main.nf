@@ -5,14 +5,14 @@ params.collection_info   = "collections_info.json"
 params.final_report_pdf  = "final_report.pdf"
 params.final_report_html = "final_report.html"
 
-// add all the process steps
-include { computeSilhouette } from './computeSilhouette.nf'
-include { fetchCollections }  from './fetchCollections.nf'
-include { fetchDatasets }     from './fetchDatasets.nf'
-include { generatePlots }     from './generatePlots.nf'
-include { mergeResults }      from './mergeResults.nf'
-include { splitCollections }  from './splitCollections.nf'
-include { splitDatasets }     from './splitDatasets.nf'
+// include all the modules
+include { computeSilhouette } from './modules/computeSilhouette.nf'
+include { fetchCollections }  from './modules/fetchCollections.nf'
+include { fetchDatasets }     from './modules/fetchDatasets.nf'
+include { generatePlots }     from './modules/generatePlots.nf'
+include { mergeResults }      from './modules/mergeResults.nf'
+include { splitCollections }  from './modules/splitCollections.nf'
+include { splitDatasets }     from './modules/splitDatasets.nf'
 
 // Define Workflow Execution Order
 
@@ -22,19 +22,19 @@ workflow {
     collection_json = fetchCollections(params.collection_info)
 
     // **Step 2: Split collections into multiple JSONs**
-    collections_json =splitCollections(collection_json)
+    collections_json = channel.of(splitCollections(collection_json))
 
     // **Step 3: Fetch dataset metadata for each collection**
-    datasets_json = fetchDatasets(collections_json, params.test_mode)
+    datasets_json = channel.of(fetchDatasets(collections_json,params.test_mode))
   
     // **Step 4: Split datasets into individual dataset versions**
-    dataset_versions_json = splitDatasets(datasets_json)
+    dataset_versions_json = channel.of(splitDatasets(datasets_json))
 
     // **Step 5: Compute silhouette scores for each dataset version**
-    scores_csvs = computeSilhouette(dataset_versions_json)
+    scores_csvs = channel.of(computeSilhouette(dataset_versions_json))
 
     // **Step 6: Generate plots**
-    plots = generatePlots(scores_csvs)
+    plots = channel.of(generatePlots(scores_csvs))
 
     // **Step 7: Merge results into a final report**
     mergeResults(plots, params.final_report_pdf, params.final_report_html)

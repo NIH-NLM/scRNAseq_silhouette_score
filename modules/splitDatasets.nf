@@ -4,7 +4,7 @@ process splitDatasets {
     publishDir "${launchDir}/${params.datadir}", mode: 'copy'
     
     input:
-        path dataset_json
+        path dataset_json each
         
     output:
         path "dataset_*.json", emit: dataset_jsons
