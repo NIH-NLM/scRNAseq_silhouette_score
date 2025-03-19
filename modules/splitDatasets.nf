@@ -4,14 +4,16 @@ process splitDatasets {
     publishDir "${launchDir}/${params.datadir}", mode: 'copy'
     
     input:
-        path dataset_json each
+        val  datasets_ready
+        path dataset_json
         
     output:
         path "dataset_*.json", emit: dataset_jsons
-
+        val  true, emit: versions_ready_ch
+	
     script:
     """
-    bash "${launchDir}/bin/splitDatasets.sh"
+    bash "${launchDir}/bin/splitDatasets.sh" "$dataset_json"
     """
 }
 

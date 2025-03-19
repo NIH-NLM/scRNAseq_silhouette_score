@@ -1,5 +1,5 @@
 import os
-import panda as pd
+import pandas as pd
 import json
 import sys
 import scanpy as sc
@@ -45,7 +45,6 @@ def compute_silhouette(dataset_info_file):
     dataset_path = download_h5ad(dataset_url, dataset_version_id)
     if not dataset_path:
         print(f"ERROR: Skipping dataset {dataset_version_id} - No local file available.")
-        continue
 
     try:
         print(f"Loading dataset {dataset_version_id} from {dataset_path}...")

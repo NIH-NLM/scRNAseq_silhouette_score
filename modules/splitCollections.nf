@@ -7,11 +7,12 @@ process splitCollections {
         path collection_json
         
     output:
-        path "collection_*.json", emit: collection_jsons
+        path "collection_*.json", emit: collections_json
+        val true, emit: collections_ready_ch
 
     script:
     """
-    bash "${launchDir}/bin/splitCollections.sh" "$collection_json"
+    bash "${launchDir}/bin/splitCollections.sh" "$collection_json"    
     """
 }
 

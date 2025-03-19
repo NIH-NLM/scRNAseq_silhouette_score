@@ -4,13 +4,14 @@ process mergeResults {
     publishDir "${params.outdir}/final_report", mode: 'copy'
 
     input:
+        val  plots_ready
         path dataset_plots
 	val  final_report_pdf
 	val  final_report_html
 
     output:
         path final_report_pdf, emit: final_pdf
-        path final_report.html, emit: final_html
+        path final_report_html, emit: final_html
 
     script:
     """
